@@ -1,0 +1,13 @@
+src/__tests__/
+coverage/
+.github/
+.git/
+.gitignore
+.npmignore
+jest.config.js
+tsconfig.json
+*.test.ts
+*.spec.ts
+.DS_Store
+*.log
+.history/
