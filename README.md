@@ -19,22 +19,22 @@ npm install zod
 ### Basic Usage
 
 ```typescript
-import { SlovakIBANValidator } from 'slovak-iban-validator';
+import { SlovakIBANValidator } from "slovak-iban-validator";
 
 // Validate an IBAN with full details
-const result = SlovakIBANValidator.validateIBAN('SK3112000000198742637541');
+const result = SlovakIBANValidator.validateIBAN("SK5911000000002610001237");
 console.log(result);
 // Output:
 // {
 //   valid: true,
 //   errors: [],
-//   formatted: 'SK31 1200 0000 1987 4263 7541',
+//   formatted: 'SK59 1100 0000 0026 1000 1237',
 //   bank_swift: 'TATRSKBX',
 //   bank_name: 'Tatra banka, a.s.'
 // }
 
 // Example with invalid IBAN
-const invalidResult = SlovakIBANValidator.validateIBAN('SK001234');
+const invalidResult = SlovakIBANValidator.validateIBAN("SK001234");
 console.log(invalidResult);
 // Output:
 // {
@@ -52,17 +52,17 @@ console.log(invalidResult);
 ### Using with Yup
 
 ```typescript
-import { createYupValidator } from 'slovak-iban-validator';
-import * as yup from 'yup';
+import { createYupValidator } from "slovak-iban-validator";
+import * as yup from "yup";
 
 // Create a schema with Slovak IBAN validation
 const schema = yup.object({
-  iban: createYupValidator().required()
+  iban: createYupValidator().required(),
 });
 
 // Validate the IBAN
 try {
-  const result = await schema.validate({ iban: 'SK3112000000198742637541' });
+  const result = await schema.validate({ iban: "SK3112000000198742637541" });
   console.log(result);
   // Output: { iban: 'SK31 1200 0000 1987 4263 7541' }
 } catch (error) {
@@ -73,16 +73,16 @@ try {
 ### Using with Zod
 
 ```typescript
-import { createZodValidator } from 'slovak-iban-validator';
-import { z } from 'zod';
+import { createZodValidator } from "slovak-iban-validator";
+import { z } from "zod";
 
 // Create a schema with Slovak IBAN validation
 const schema = z.object({
-  iban: createZodValidator()
+  iban: createZodValidator(),
 });
 
 // Validate the IBAN
-const result = schema.safeParse({ iban: 'SK3112000000198742637541' });
+const result = schema.safeParse({ iban: "SK3112000000198742637541" });
 if (result.success) {
   console.log(result.data);
   // Output: {
