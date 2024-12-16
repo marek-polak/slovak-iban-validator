@@ -1,13 +1,7 @@
 import { SLOVAK_BANKS, BankInfo } from "./banks";
-export * from "./validation";
-
-export interface IBANValidationResult {
-  valid: boolean;
-  errors: string[];
-  formatted: string | null;
-  bank_swift: string | null;
-  bank_name: string | null;
-}
+export { createYupValidator } from "./yupValidation";
+// Re-export yup augmentation
+export * from "./yupValidation";
 
 /**
  * Validates a Slovak IBAN number
@@ -117,4 +111,12 @@ export class SlovakIBANValidator {
 
     return remainder === 1;
   }
+}
+
+export interface IBANValidationResult {
+  valid: boolean;
+  errors: string[];
+  formatted: string | null;
+  bank_swift: string | null;
+  bank_name: string | null;
 }
