@@ -4,6 +4,7 @@ describe("SlovakIBANValidator", () => {
   // Valid IBAN for Tatra banka
   const validIBAN = "SK5911000000002610001237";
   const formattedIBAN = "SK59 1100 0000 0026 1000 1237";
+  SlovakIBANValidator.setLanguage("en");
 
   describe("validateIBAN", () => {
     it("should validate correct IBAN", () => {
