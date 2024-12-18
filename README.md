@@ -99,6 +99,35 @@ if (result.success) {
 }
 ```
 
+### Internationalization
+
+The validator supports both Slovak (default) and English error messages. You can change the language using the `setLanguage` method:
+
+```typescript
+import { SlovakIBANValidator } from "slovak-iban-validator";
+
+// Use English messages
+SlovakIBANValidator.setLanguage('en');
+
+// Use Slovak messages (default)
+SlovakIBANValidator.setLanguage('sk');
+
+// Example with Slovak messages
+const result = SlovakIBANValidator.validateIBAN("SK001234");
+console.log(result);
+// Output:
+// {
+//   valid: false,
+//   errors: [
+//     'Nesprávna dĺžka: očakávaných 24 znakov, zadaných 7',
+//     'Nesprávny formát: IBAN by mal obsahovať iba číslice za kódom krajiny'
+//   ],
+//   formatted: null,
+//   bank_swift: null,
+//   bank_name: null
+// }
+```
+
 ## Features
 
 - Comprehensive IBAN validation
