@@ -34,7 +34,7 @@ console.log(result);
 // }
 
 // Example with invalid IBAN
-const invalidResult = SlovakIBANValidator.validateIBAN("SK001234");
+const invalidResult = SlovakIBANValidator.validateIBAN("SK001234", { multipleErrors: true });
 console.log(invalidResult);
 // Output:
 // {
