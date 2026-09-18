@@ -11,7 +11,7 @@ describe("Zod Integration", () => {
 
   beforeEach(() => {
     schema = z.object({
-      iban: createZodValidator(),
+      iban: createZodValidator({ locale: "en" }),
     });
   });
 
@@ -63,6 +63,19 @@ describe("Zod Integration", () => {
     if (!result.success) {
       expect(result.error.issues[0].message).toBe(
         "Invalid input: expected string, received undefined"
+      );
+    }
+  });
+
+  it("should default to Slovak messages", () => {
+    const skSchema = z.object({
+      iban: createZodValidator(),
+    });
+    const result = skSchema.safeParse({ iban: invalidIBAN });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues[0].message).toBe(
+        "Neplatná dĺžka: očakávaných 24 znakov, zadaných 8"
       );
     }
   });

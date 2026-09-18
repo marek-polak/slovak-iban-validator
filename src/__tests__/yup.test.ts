@@ -11,7 +11,7 @@ describe("Yup Integration", () => {
 
   beforeEach(() => {
     schema = yup.object({
-      iban: createYupValidator().required(),
+      iban: createYupValidator({ locale: "en" }).required(),
     });
   });
 
@@ -40,6 +40,15 @@ describe("Yup Integration", () => {
   it("should handle undefined IBAN when required", async () => {
     await expect(schema.validate({})).rejects.toThrow(
       "iban is a required field"
+    );
+  });
+
+  it("should default to Slovak messages", async () => {
+    const skSchema = yup.object({
+      iban: createYupValidator().required(),
+    });
+    await expect(skSchema.validate({ iban: invalidIBAN })).rejects.toThrow(
+      "Neplatná dĺžka: očakávaných 24 znakov, zadaných 8"
     );
   });
 });

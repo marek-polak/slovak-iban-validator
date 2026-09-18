@@ -34,14 +34,14 @@ console.log(result);
 // }
 
 // Example with invalid IBAN
-const invalidResult = SlovakIBANValidator.validateIBAN("SK001234");
+const invalidResult = SlovakIBANValidator.validateIBAN("SK001234", { multipleErrors: true });
 console.log(invalidResult);
 // Output:
 // {
 //   valid: false,
 //   errors: [
-//     'Invalid length: expected 24 characters, got 7',
-//     'Invalid format: IBAN should contain only digits after country code'
+//     'Neplatná dĺžka: očakávaných 24 znakov, zadaných 7',
+//     'Neplatný formát: IBAN musí za kódom krajiny obsahovať iba číslice'
 //   ],
 //   formatted: null,
 //   bank_swift: null,
@@ -100,6 +100,38 @@ if (result.success) {
 ```
 
 The root entry point (`slovak-iban-validator`) has no dependency on yup or zod. Each integration lives in its own subpath (`slovak-iban-validator/yup`, `slovak-iban-validator/zod`) and only requires its own validation library.
+
+## Localization
+
+Error messages are localized in Slovak (`'sk'`) and English (`'en'`). Slovak is the default locale.
+
+```typescript
+import { SlovakIBANValidator } from "slovak-iban-validator";
+
+// Slovak messages (default)
+SlovakIBANValidator.validateIBAN("SK001234");
+
+// English messages
+SlovakIBANValidator.validateIBAN("SK001234", { locale: "en" });
+
+// Return all errors instead of just the first one
+SlovakIBANValidator.validateIBAN("SK001234", {
+  multipleErrors: true,
+  locale: "en",
+});
+```
+
+The same `locale` option is accepted by the validation-library factories:
+
+```typescript
+import { createZodValidator } from "slovak-iban-validator/zod";
+import { createYupValidator } from "slovak-iban-validator/yup";
+
+createZodValidator({ locale: "en" });
+createYupValidator({ locale: "en" });
+```
+
+The `Locale` type (`'sk' | 'en'`) and the `MESSAGES` table are exported from the root entry point.
 
 ## Features
 
