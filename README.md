@@ -133,6 +133,33 @@ createYupValidator({ locale: "en" });
 
 The `Locale` type (`'sk' | 'en'`) and the `MESSAGES` table are exported from the root entry point.
 
+## Bank logos
+
+Bundled SVG logos for supported banks are available via a separate subpath (zero
+runtime dependencies):
+
+```typescript
+import { SlovakIBANValidator } from "slovak-iban-validator";
+import { getBankLogo, hasBankLogo, BANK_LOGOS } from "slovak-iban-validator/logos";
+
+const result = SlovakIBANValidator.validateIBAN("SK5911000000002610001237");
+// extract the 4-digit bank code from the IBAN
+const bankCode = "SK5911000000002610001237".substring(4, 8); // "1100"
+
+if (hasBankLogo(bankCode)) {
+  const svg = getBankLogo(bankCode); // raw SVG markup string
+  // e.g. element.innerHTML = svg;
+}
+```
+
+Each logo is normalized SVG markup with a fixed `viewBox="0 0 240 80"` and a
+transparent background — render it at any size. Bank codes **without** a bundled
+logo: `3100`, `7300`, `8410`, `8430`.
+
+Note: bank logos are trademarks of their respective owners and are **not**
+covered by this package's MIT license — see
+[LOGOS-NOTICE.md](./LOGOS-NOTICE.md).
+
 ## Features
 
 - Comprehensive IBAN validation

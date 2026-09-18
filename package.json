@@ -1,11 +1,12 @@
 {
   "name": "slovak-iban-validator",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A TypeScript library for validating Slovak IBAN numbers",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "LOGOS-NOTICE.md"
   ],
   "exports": {
     ".": {
@@ -20,6 +21,10 @@
       "types": "./dist/zod.d.ts",
       "default": "./dist/zod.js"
     },
+    "./logos": {
+      "types": "./dist/logos.d.ts",
+      "default": "./dist/logos.js"
+    },
     "./package.json": "./package.json"
   },
   "typesVersions": {
@@ -29,11 +34,15 @@
       ],
       "zod": [
         "dist/zod.d.ts"
+      ],
+      "logos": [
+        "dist/logos.d.ts"
       ]
     }
   },
   "scripts": {
     "build": "tsc",
+    "build:logos": "node scripts/build-logos.js",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
