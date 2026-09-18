@@ -61,7 +61,9 @@ describe("Zod Integration", () => {
     const result = schema.safeParse({});
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error.issues[0].message).toBe("Required");
+      expect(result.error.issues[0].message).toBe(
+        "Invalid input: expected string, received undefined"
+      );
     }
   });
 });
