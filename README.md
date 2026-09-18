@@ -7,10 +7,10 @@ A TypeScript library for validating Slovak IBAN numbers and retrieving bank info
 ```bash
 npm install slovak-iban-validator
 
-# If using with Yup
+# If using with Yup (supported: ^1.0.0)
 npm install yup
 
-# If using with Zod
+# If using with Zod (supported: ^3.9.0)
 npm install zod
 ```
 
