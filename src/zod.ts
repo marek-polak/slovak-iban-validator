@@ -7,17 +7,14 @@ import { SlovakIBANValidator } from './core';
  */
 export const createZodValidator = () => {
   return z.string().superRefine((value, ctx) => {
-    const result = SlovakIBANValidator.validateIBAN(value);
-    if (!result.valid) {
-      result.errors.forEach(error => {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: error,
-        });
+    const result = SlovakIBANValidator.validateIBAN(value, true);
+    for (const message of result.errors) {
+      ctx.addIssue({
+        code: 'custom',
+        message,
       });
     }
-    return result.valid;
-  }).transform(value => {
+  }).transform((value): ZodIBANResult => {
     const result = SlovakIBANValidator.validateIBAN(value);
     return {
       raw: value,

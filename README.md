@@ -10,7 +10,7 @@ npm install slovak-iban-validator
 # If using with Yup (supported: ^1.0.0)
 npm install yup
 
-# If using with Zod (supported: ^3.9.0)
+# If using with Zod (supported: ^4.0.0)
 npm install zod
 ```
 
