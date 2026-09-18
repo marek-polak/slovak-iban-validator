@@ -1,13 +1,21 @@
 import { z } from 'zod';
-import { SlovakIBANValidator } from './core';
+import { SlovakIBANValidator, Locale } from './core';
+
+export interface ZodValidatorOptions {
+  locale?: Locale;
+}
 
 /**
  * Creates a Zod validator for Slovak IBAN
  * @returns Zod schema with Slovak IBAN validation
  */
-export const createZodValidator = () => {
+export const createZodValidator = (options: ZodValidatorOptions = {}) => {
+  const { locale } = options;
   return z.string().superRefine((value, ctx) => {
-    const result = SlovakIBANValidator.validateIBAN(value, true);
+    const result = SlovakIBANValidator.validateIBAN(value, {
+      multipleErrors: true,
+      locale,
+    });
     for (const message of result.errors) {
       ctx.addIssue({
         code: 'custom',
@@ -15,7 +23,7 @@ export const createZodValidator = () => {
       });
     }
   }).transform((value): ZodIBANResult => {
-    const result = SlovakIBANValidator.validateIBAN(value);
+    const result = SlovakIBANValidator.validateIBAN(value, { locale });
     return {
       raw: value,
       formatted: result.formatted,

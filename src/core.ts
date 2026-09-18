@@ -1,7 +1,15 @@
 import { SLOVAK_BANKS, BankInfo } from "./banks";
+import { DEFAULT_LOCALE, getMessages, Locale } from "./messages";
 
 export type { BankInfo };
 export { SLOVAK_BANKS };
+export type { Locale };
+export { DEFAULT_LOCALE, MESSAGES } from "./messages";
+
+export interface ValidateOptions {
+  multipleErrors?: boolean;
+  locale?: Locale;
+}
 
 export interface IBANValidationResult {
   valid: boolean;
@@ -23,13 +31,18 @@ export class SlovakIBANValidator {
   /**
    * Validates a Slovak IBAN number and returns detailed validation result
    * @param iban The IBAN number to validate
-   * @param multipleErrors If true, returns an array of errors, otherwise returns the first error
+   * @param options Either a boolean (legacy `multipleErrors` flag) or an options
+   * object with `multipleErrors` (return all errors instead of the first one) and
+   * `locale` (error message language, defaults to Slovak)
    * @returns IBANValidationResult object containing validation details
    */
   public static validateIBAN(
     iban: string,
-    multipleErrors = false
+    options: boolean | ValidateOptions = {}
   ): IBANValidationResult {
+    const { multipleErrors = false, locale = DEFAULT_LOCALE } =
+      typeof options === "boolean" ? { multipleErrors: options } : options;
+    const messages = getMessages(locale);
     const result: IBANValidationResult = {
       valid: true,
       errors: [],
@@ -44,16 +57,17 @@ export class SlovakIBANValidator {
     // Check length
     if (normalizedIBAN.length !== this.IBAN_LENGTH) {
       result.errors.push(
-        `Invalid length: expected ${this.IBAN_LENGTH} characters, got ${normalizedIBAN.length}`
+        messages.invalidLength(this.IBAN_LENGTH, normalizedIBAN.length)
       );
     }
 
     // Check country code
     if (!normalizedIBAN.startsWith(this.COUNTRY_CODE)) {
       result.errors.push(
-        `Invalid country code: expected ${
-          this.COUNTRY_CODE
-        }, got ${normalizedIBAN.slice(0, 2)}`
+        messages.invalidCountryCode(
+          this.COUNTRY_CODE,
+          normalizedIBAN.slice(0, 2)
+        )
       );
     }
 
@@ -63,7 +77,7 @@ export class SlovakIBANValidator {
     );
     if (!expectedRegex.test(normalizedIBAN)) {
       result.errors.push(
-        "Invalid format: IBAN should contain only digits after country code"
+        messages.invalidFormat
       );
     }
 
@@ -73,7 +87,7 @@ export class SlovakIBANValidator {
       const bankInfo = SLOVAK_BANKS[bankCode];
 
       if (!bankInfo) {
-        result.errors.push(`Unknown bank code: ${bankCode}`);
+        result.errors.push(messages.unknownBankCode(bankCode));
       } else {
         result.bank_swift = bankInfo.swift;
         result.bank_name = bankInfo.name;
@@ -82,7 +96,7 @@ export class SlovakIBANValidator {
 
     // Verify checksum
     if (!this.verifyChecksum(normalizedIBAN)) {
-      result.errors.push("Invalid checksum");
+      result.errors.push(messages.invalidChecksum);
     }
 
     // Set formatted value for valid IBAN

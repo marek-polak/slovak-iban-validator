@@ -22,7 +22,9 @@ describe("SlovakIBANValidator", () => {
     });
 
     it("should handle invalid length", () => {
-      const result = SlovakIBANValidator.validateIBAN("SK311200");
+      const result = SlovakIBANValidator.validateIBAN("SK311200", {
+        locale: "en",
+      });
       expect(result.valid).toBe(false);
       expect(result.errors).toContain(
         "Invalid length: expected 24 characters, got 8"
@@ -31,7 +33,8 @@ describe("SlovakIBANValidator", () => {
 
     it("should handle invalid country code", () => {
       const result = SlovakIBANValidator.validateIBAN(
-        "CZ8511000000002611803119"
+        "CZ8511000000002611803119",
+        { locale: "en" }
       );
       expect(result.valid).toBe(false);
       expect(result.errors).toContain(
@@ -41,7 +44,8 @@ describe("SlovakIBANValidator", () => {
 
     it("should handle invalid format", () => {
       const result = SlovakIBANValidator.validateIBAN(
-        "SK85AB000000002611803119"
+        "SK85AB000000002611803119",
+        { locale: "en" }
       );
       expect(result.valid).toBe(false);
       expect(result.errors).toContain(
@@ -51,7 +55,8 @@ describe("SlovakIBANValidator", () => {
 
     it("should handle unknown bank code", () => {
       const result = SlovakIBANValidator.validateIBAN(
-        "SK8599000000002611803119"
+        "SK8599000000002611803119",
+        { locale: "en" }
       );
       expect(result.valid).toBe(false);
       expect(result.errors).toContain("Unknown bank code: 9900");
@@ -59,18 +64,65 @@ describe("SlovakIBANValidator", () => {
 
     it("should handle invalid checksum", () => {
       const result = SlovakIBANValidator.validateIBAN(
-        "SK8511000000002611803118"
+        "SK8511000000002611803118",
+        { locale: "en" }
       );
       expect(result.valid).toBe(false);
       expect(result.errors).toContain("Invalid checksum");
     });
 
     it("should handle empty input", () => {
-      const result = SlovakIBANValidator.validateIBAN("");
+      const result = SlovakIBANValidator.validateIBAN("", { locale: "en" });
       expect(result.valid).toBe(false);
       expect(result.errors).toContain(
         "Invalid length: expected 24 characters, got 0"
       );
+    });
+  });
+
+  describe("localization", () => {
+    it("should default to Slovak messages", () => {
+      const result = SlovakIBANValidator.validateIBAN(
+        "SK0011000000002610001237"
+      );
+      expect(result.valid).toBe(false);
+      expect(result.errors).toContain("Neplatný kontrolný súčet");
+    });
+
+    it("should return Slovak country code error by default", () => {
+      const result = SlovakIBANValidator.validateIBAN(
+        "CZ8511000000002611803119"
+      );
+      expect(result.valid).toBe(false);
+      expect(result.errors).toContain(
+        "Neplatný kód krajiny: očakávaný SK, zadaný CZ"
+      );
+    });
+
+    it("should return Slovak length error by default", () => {
+      const result = SlovakIBANValidator.validateIBAN("SK311200");
+      expect(result.valid).toBe(false);
+      expect(result.errors).toContain(
+        "Neplatná dĺžka: očakávaných 24 znakov, zadaných 8"
+      );
+    });
+
+    it("should still support boolean second arg for multipleErrors", () => {
+      const result = SlovakIBANValidator.validateIBAN("SK311200", true);
+      expect(result.valid).toBe(false);
+      expect(result.errors.length).toBeGreaterThan(1);
+      expect(result.errors).toContain(
+        "Neplatná dĺžka: očakávaných 24 znakov, zadaných 8"
+      );
+    });
+
+    it("should support multipleErrors via options object", () => {
+      const result = SlovakIBANValidator.validateIBAN("SK311200", {
+        multipleErrors: true,
+        locale: "en",
+      });
+      expect(result.valid).toBe(false);
+      expect(result.errors.length).toBeGreaterThan(1);
     });
   });
 });
