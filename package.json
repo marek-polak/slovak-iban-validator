@@ -1,9 +1,37 @@
 {
   "name": "slovak-iban-validator",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A TypeScript library for validating Slovak IBAN numbers",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./yup": {
+      "types": "./dist/yup.d.ts",
+      "default": "./dist/yup.js"
+    },
+    "./zod": {
+      "types": "./dist/zod.d.ts",
+      "default": "./dist/zod.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "typesVersions": {
+    "*": {
+      "yup": [
+        "dist/yup.d.ts"
+      ],
+      "zod": [
+        "dist/zod.d.ts"
+      ]
+    }
+  },
   "scripts": {
     "build": "tsc",
     "test": "jest",
@@ -30,8 +58,8 @@
     "zod": "^3.22.4"
   },
   "peerDependencies": {
-    "yup": ">=1.0.0",
-    "zod": ">=3.0.0"
+    "yup": "^1.0.0",
+    "zod": "^3.9.0"
   },
   "peerDependenciesMeta": {
     "yup": {

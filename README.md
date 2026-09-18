@@ -7,10 +7,10 @@ A TypeScript library for validating Slovak IBAN numbers and retrieving bank info
 ```bash
 npm install slovak-iban-validator
 
-# If using with Yup
+# If using with Yup (supported: ^1.0.0)
 npm install yup
 
-# If using with Zod
+# If using with Zod (supported: ^3.9.0)
 npm install zod
 ```
 
@@ -52,7 +52,7 @@ console.log(invalidResult);
 ### Using with Yup
 
 ```typescript
-import { createYupValidator } from "slovak-iban-validator";
+import { createYupValidator } from "slovak-iban-validator/yup";
 import * as yup from "yup";
 
 // Create a schema with Slovak IBAN validation
@@ -73,7 +73,7 @@ try {
 ### Using with Zod
 
 ```typescript
-import { createZodValidator } from "slovak-iban-validator";
+import { createZodValidator } from "slovak-iban-validator/zod";
 import { z } from "zod";
 
 // Create a schema with Slovak IBAN validation
@@ -98,6 +98,8 @@ if (result.success) {
   console.error(result.error);
 }
 ```
+
+The root entry point (`slovak-iban-validator`) has no dependency on yup or zod. Each integration lives in its own subpath (`slovak-iban-validator/yup`, `slovak-iban-validator/zod`) and only requires its own validation library.
 
 ## Features
 
