@@ -152,6 +152,14 @@ The `validateIBAN` method returns an object with the following properties:
 - `bank_swift`: string | null - SWIFT/BIC code of the bank
 - `bank_name`: string | null - Name of the bank
 
+Bank information follows the [NBS Prevodník SK register](https://nbs.sk/platby/vseobecne-informacie/ciselniky-a-registre/prevodnik-sk/). Providers without a BIC have `bank_swift: null`.
+
+## 2.0.0 Breaking Changes
+
+- Bank codes 5200, 8050, 8170, 8410, and 8430 are no longer in the NBS register and are now rejected as unknown bank codes.
+- `BankInfo.swift` is now `string | null`.
+- Names and SWIFT codes are corrected to the NBS register, including codes 3100, 5900, 6500, 7300, 8130, 8330, and 8420.
+
 ## License
 
 MIT
