@@ -1,5 +1,18 @@
 import { SlovakIBANValidator } from "../index";
 
+const ibanForBankCode = (bankCode: string): string => {
+  const bban = `${bankCode}${"0".repeat(16)}`;
+  const rearranged = `${bban}282000`;
+  let remainder = 0;
+
+  for (const digit of rearranged) {
+    remainder = (remainder * 10 + Number(digit)) % 97;
+  }
+
+  const checkDigits = String(98 - remainder).padStart(2, "0");
+  return `SK${checkDigits}${bban}`;
+};
+
 describe("SlovakIBANValidator", () => {
   // Valid IBAN for Tatra banka
   const validIBAN = "SK5911000000002610001237";
@@ -13,6 +26,52 @@ describe("SlovakIBANValidator", () => {
       expect(result.formatted).toBe(formattedIBAN);
       expect(result.bank_name).toBe("Tatra banka, a.s.");
       expect(result.bank_swift).toBe("TATRSKBX");
+    });
+
+    it("should return the NBS bank details for code 7300", () => {
+      const result = SlovakIBANValidator.validateIBAN(ibanForBankCode("7300"));
+
+      expect(result.valid).toBe(true);
+      expect(result.bank_name).toBe(
+        "ING Bank N.V., pobočka zahraničnej banky"
+      );
+      expect(result.bank_swift).toBe("INGBSKBX");
+    });
+
+    it("should return the NBS bank details for code 8320", () => {
+      const result = SlovakIBANValidator.validateIBAN(ibanForBankCode("8320"));
+
+      expect(result.valid).toBe(true);
+      expect(result.bank_name).toBe(
+        "J&T BANKA, a.s., pobočka zahraničnej banky"
+      );
+      expect(result.bank_swift).toBe("JTBPSKBA");
+    });
+
+    it("should return the NBS bank details for code 6500", () => {
+      const result = SlovakIBANValidator.validateIBAN(ibanForBankCode("6500"));
+
+      expect(result.valid).toBe(true);
+      expect(result.bank_name).toBe("365.bank, a.s.");
+      expect(result.bank_swift).toBe("POBNSKBA");
+    });
+
+    it("should allow an NBS provider without a BIC", () => {
+      const result = SlovakIBANValidator.validateIBAN(ibanForBankCode("8400"));
+
+      expect(result.valid).toBe(true);
+      expect(result.bank_name).toBe("COFIDIS SA, pobočka zahraničnej banky");
+      expect(result.bank_swift).toBeNull();
+    });
+
+    it("should reject removed bank code 5200", () => {
+      const result = SlovakIBANValidator.validateIBAN(
+        ibanForBankCode("5200"),
+        { locale: "en" }
+      );
+
+      expect(result.valid).toBe(false);
+      expect(result.errors).toContain("Unknown bank code: 5200");
     });
 
     it("should validate formatted IBAN", () => {
